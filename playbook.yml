@@ -1,0 +1,40 @@
+- 
+    name: Create file on remote host
+    hosts: centos
+    vars: 
+        packages:
+            - name: htop
+            - name: vim
+    vars_files:
+        - ./centos.yml
+    tasks:
+        - 
+            lineinfile:
+                path: /tmp/test.txt
+                create: yes
+                line: put line {{my_var}}
+        -
+            name: Check firewalld status
+            command: service firewalld status
+            register: result
+            become: true
+        -
+            name: Enable firewalld
+            service:
+                name: firewalld
+                state: started
+            become: true
+            when: result.stdout.find('enabled') == -1
+        -
+            name: 'Enable http port'
+            firewalld:
+                port: 80/tcp
+                state: enabled
+            become: true
+        -
+            name: Install required packages
+            loop: "{{packages}}"
+            when: ansible_os_family == 'RedHat'
+            yum:
+                name: "{{item.name}}"
+                state: installed
