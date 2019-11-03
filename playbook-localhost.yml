@@ -1,0 +1,10 @@
+- 
+    name: Create file on localhost
+    hosts: localhost
+    gather_facts: false
+    tasks:
+        - 
+            lineinfile:
+                path: /tmp/test.txt
+                create: yes
+                line: put line {{my_var}}
