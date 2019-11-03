@@ -29,3 +29,5 @@ Ansible configuration
 #Tips&Tricks
 * To check ansible wide variable which can be used on remote host:
     `ansible -i inventory centos -m setup`
+* To create ansible role you need to generate proper folders structure first:
+    `ansible-galaxy init mysql`
